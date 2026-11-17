@@ -1,4 +1,4 @@
-![alt text](image.png)# Coffee'station Backend — Project Plan
+# Coffee'station Backend — Project Plan
 
 ## 1. Project Overview
 
