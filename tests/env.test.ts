@@ -6,6 +6,7 @@ const validEnv = {
   PORT: "8000",
   DATABASE_URL: "postgresql://user:pass@localhost:5432/db",
 };
+
 describe("envSchema", () => {
   it("accepts a valid config", () => {
     const result = envSchema.safeParse(validEnv);
@@ -51,5 +52,22 @@ describe("envSchema", () => {
     const result = envSchema.safeParse({ ...validEnv, PORT: undefined });
     expect(result.success).toBe(true);
     expect(result.data?.PORT).toBe(8000);
+  });
+});
+
+describe("envSchema edge cases", () => {
+  it("rejects PORT 65536 (just above the top edge)", () => {
+    const result = envSchema.safeParse({ ...validEnv, PORT: "65536" });
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects a PORT that is not a whole number", () => {
+    const result = envSchema.safeParse({ ...validEnv, PORT: "8000.5" });
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects a missing NODE_ENV", () => {
+    const result = envSchema.safeParse({ ...validEnv, NODE_ENV: undefined });
+    expect(result.success).toBe(false);
   });
 });
